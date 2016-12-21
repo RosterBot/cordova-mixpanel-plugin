@@ -196,14 +196,6 @@
 // PEOPLE API
 
 
--(void)people_identify:(CDVInvokedUrlCommand*)command;
-{
-    // ios sdk doesnt have separate people identify method
-    // just call the normal identify call
-    [self identify:command];
-}
-
-
 // Helper function to convert NSString to NSData
 -(NSData*) convertToData:(NSString *)devToken;
 {
@@ -302,6 +294,46 @@
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
+
+
+-(void)people_track_charge:(CDVInvokedUrlCommand*)command;
+{
+    CDVPluginResult* pluginResult = nil;
+    Mixpanel* mixpanelInstance = [Mixpanel sharedInstance];
+    NSNumber* amount = [command argumentAtIndex:0];
+    NSDictionary* chargeProperties = [command argumentAtIndex:1 withDefault:@{}];
+
+    if (mixpanelInstance == nil)
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Mixpanel not initialized"];
+    }
+    else
+    {
+        [mixpanelInstance.people trackCharge:amount withProperties:chargeProperties];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+
+-(void)people_unset:(CDVInvokedUrlCommand*)command;
+{
+    CDVPluginResult* pluginResult = nil;
+    Mixpanel* mixpanelInstance = [Mixpanel sharedInstance];
+    NSArray* propertiesToUnset = [command.arguments objectAtIndex:0];
+
+    if (mixpanelInstance == nil)
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Mixpanel not initialized"];
+    }
+    else
+    {
+        [mixpanelInstance.people unset:propertiesToUnset];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 
 # pragma mark Private functions
 -(BOOL)checkMixpanelInstance:(CDVInvokedUrlCommand*)command

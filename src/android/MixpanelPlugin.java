@@ -39,11 +39,12 @@ public class MixpanelPlugin extends CordovaPlugin {
         // PEOPLE API
 
 
-        PEOPLE_IDENTIFY("people_identify"),
         PEOPLE_INCREMENT("people_increment"),
         PEOPLE_SET_PUSH_ID("people_setPushId"),
         PEOPLE_SET("people_set"),
-        PEOPLE_SET_ONCE("people_set_once");
+        PEOPLE_SET_ONCE("people_set_once"),
+        PEOPLE_TRACK_CHARGE("people_track_charge"),
+        PEOPLE_UNSET("people_unset");
 
         private final String name;
         private static final Map<String, Action> lookup = new HashMap<String, Action>();
@@ -102,8 +103,6 @@ public class MixpanelPlugin extends CordovaPlugin {
                 return handleTimeEvent(args, cbCtx);
             case TRACK:
                 return handleTrack(args, cbCtx);
-            case PEOPLE_IDENTIFY:
-                return handlePeopleIdentify(args, cbCtx);
             case PEOPLE_INCREMENT:
                 return handlePeopleIncrement(args, cbCtx);
             case PEOPLE_SET_PUSH_ID:
@@ -112,6 +111,10 @@ public class MixpanelPlugin extends CordovaPlugin {
                 return handlePeopleSet(args, cbCtx);
             case PEOPLE_SET_ONCE:
                 return handlePeopleSetOnce(args, cbCtx);
+            case PEOPLE_TRACK_CHARGE:
+                return handlePeopleTrackCharge(args, cbCtx);
+            case PEOPLE_UNSET:
+                return handlePeopleUnset(args, cbCtx);
             default:
                 this.error(cbCtx, "unknown action");
                 return false;
@@ -168,8 +171,9 @@ public class MixpanelPlugin extends CordovaPlugin {
 
 
     private boolean handleIdentify(JSONArray args, final CallbackContext cbCtx) {
-        String uniqueId = args.optString(0, "");
-        mixpanel.identify(uniqueId);
+        String distinctId = args.optString(0, "");
+        mixpanel.identify(distinctId);
+        mixpanel.getPeople().identify(distinctId);
         cbCtx.success();
         return true;
     }
@@ -228,14 +232,6 @@ public class MixpanelPlugin extends CordovaPlugin {
     }
 
 
-    private boolean handlePeopleIdentify(JSONArray args, final CallbackContext cbCtx) {
-        String distinctId = args.optString(0, "");
-        mixpanel.getPeople().identify(distinctId);
-        cbCtx.success();
-        return true;
-    }
-
-
     private boolean handlePeopleIncrement(JSONArray args, final CallbackContext cbCtx) {
         JSONObject jsonPropertiesObj = args.optJSONObject(0);
         Map<String, Number> properties = new HashMap<String, Number>();
@@ -282,4 +278,30 @@ public class MixpanelPlugin extends CordovaPlugin {
         cbCtx.success();
         return true;
     }
+
+
+    private boolean handlePeopleTrackCharge(JSONArray args, final CallbackContext cbCtx) {
+        Double amount = args.optDouble(0);
+        JSONObject properties = args.optJSONObject(1);
+        if (properties == null) {
+            properties = new JSONObject();
+        }
+        mixpanel.getPeople().trackCharge(amount, properties);
+        cbCtx.success();
+        return true;
+    }
+
+
+    private boolean handlePeopleUnset(JSONArray args, final CallbackContext cbCtx) {
+        JSONArray propertiesToUnset = args.optJSONArray(0);
+        for(int i=0;i<propertiesToUnset.length();i++){
+            String propertyToUnset = propertiesToUnset.optString(i);
+            if (propertyToUnset != null){
+                mixpanel.getPeople().unset(propertyToUnset);
+            }
+        }
+        cbCtx.success();
+        return true;
+    }
+
 }

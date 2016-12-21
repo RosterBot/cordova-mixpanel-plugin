@@ -1,8 +1,8 @@
 
 ## Cordova Plugin that wraps Mixpanel sdk for android and ios
 
-- [android sdk version 4.9.1](https://github.com/mixpanel/mixpanel-android/tree/v4.9.1)
-- [ios sdk version 3.0.0](https://github.com/mixpanel/mixpanel-iphone/tree/v3.0.0)
+- [android sdk version 4.9.2](https://github.com/mixpanel/mixpanel-android/tree/v4.9.2)
+- [ios sdk version 3.0.6](https://github.com/mixpanel/mixpanel-iphone/tree/v3.0.6)
 
 #### Install
 
@@ -32,7 +32,6 @@ older versions:
 
 **window.mixpanel.people:**
 
-- identify(distinctId, onSuccess, onFail)
 - increment(peopleProperties, onSuccess, onFail)
 - setPushId(pushId, onSuccess, onFail)
   - More info about push notifications at:
@@ -50,6 +49,8 @@ older versions:
   ```
 - set(peopleProperties, onSuccess, onFail)
 - setOnce(peopleProperties, onSuccess, onFail)
+- trackCharge(amount, chargeProperties, onSuccess, onFail)
+- unset(propertiesArray, onSuccess, onFail)
 
 
 ## TODOs
@@ -81,6 +82,18 @@ open your xcode proj, goto **build phases -> link binary with libraries**:
   - add the following if missing:
       - libicucore
       - cfnetwork
+
+
+#### my build still fails, got a compile error at UIImage+MPAverageColor.m
+
+if your got this error: "variable-sized object may not be initialized" from `char colorIndices[kNumberOfHexColors] = {0};`.
+this is caused by compiler using a wrong C dialect (C99 for example).
+to fix:
+- open your project in xcode
+- goto build settings tab
+- scroll down to "apple llvm 8.0 - language"
+- set "C language dialect" to be default
+
 
 #### i get error 'Mixpanel' plugin not found, check config.xml
 

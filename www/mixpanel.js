@@ -62,7 +62,7 @@ mixpanel.showSurvey = function(onSuccess, onFail) {
   exec(onSuccess, onFail, 'Mixpanel', 'showSurvey', []);
 };
 
-mixpanel.timeEvent = function(eventName, onSuccess, onFail){
+mixpanel.timeEvent = function(eventName, onSuccess, onFail) {
   if (!eventName || typeof eventName != 'string') {
     return onFail(errors.invalid('event', eventName));
   }
@@ -81,12 +81,21 @@ mixpanel.track = function(eventName, eventProperties, onSuccess, onFail) {
 // PEOPLE API
 
 
+/** @deprecated 2016-11-21 mixpanel.identify will set id for both events and people */
 mixpanel.people.identify = function(distinctId, onSuccess, onFail) {
   if (!distinctId) {
     return onFail(errors.invalid('distinctId', distinctId));
   }
 
-  exec(onSuccess, onFail, 'Mixpanel', 'people_identify', [distinctId]);
+  exec(onSuccess, onFail, 'Mixpanel', 'identify', [distinctId]);
+};
+
+mixpanel.people.increment = function(peopleProperties, onSuccess, onFail) {
+  if (!peopleProperties || (typeof peopleProperties === 'object' && Object.keys(peopleProperties).length === 0)) {
+    return onFail(errors.invalid('properties', peopleProperties));
+  }
+
+  exec(onSuccess, onFail, 'Mixpanel', 'people_increment', [peopleProperties]);
 };
 
 mixpanel.people.set = function(peopleProperties, onSuccess, onFail) {
@@ -105,14 +114,6 @@ mixpanel.people.setOnce = function(peopleProperties, onSuccess, onFail) {
   exec(onSuccess, onFail, 'Mixpanel', 'people_set_once', [peopleProperties]);
 };
 
-mixpanel.people.increment = function(peopleProperties, onSuccess, onFail) {
-  if (!peopleProperties || (typeof peopleProperties === 'object' && Object.keys(peopleProperties).length === 0)) {
-    return onFail(errors.invalid('properties', peopleProperties));
-  }
-
-  exec(onSuccess, onFail, 'Mixpanel', 'people_increment', [peopleProperties]);
-};
-
 /**
  * @param pushId is the token/id you get back when registering the device with the notification service
  *        for android - this is the GCM token
@@ -124,6 +125,26 @@ mixpanel.people.setPushId = function(pushId, onSuccess, onFail) {
   }
 
   exec(onSuccess, onFail, 'Mixpanel', 'people_setPushId', [pushId]);
+};
+
+mixpanel.people.trackCharge = function(amount, chargeProperties, onSuccess, onFail) {
+  if (typeof amount !== 'number' || !isFinite(amount)) {
+    return onFail(errors.invalid('amount', amount));
+  }
+  if (chargeProperties && typeof chargeProperties !== 'object') {
+    return onFail(errors.invalid('chargeProperties', chargeProperties));
+  }
+
+
+  exec(onSuccess, onFail, 'Mixpanel', 'people_track_charge', [amount, chargeProperties]);
+};
+
+mixpanel.people.unset = function(propertiesArray, onSuccess, onFail) {
+  if (!Array.isArray(propertiesArray)) {
+    return onFail(errors.invalid('propertiesArray', propertiesArray));
+  }
+
+  exec(onSuccess, onFail, 'Mixpanel', 'people_unset', [propertiesArray]);
 };
 
 
