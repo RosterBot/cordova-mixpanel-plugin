@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <Cordova/CDV.h>
-#import "Mixpanel.h"
+#import <Mixpanel/Mixpanel.h>
 
 
 @interface MixpanelPlugin : CDVPlugin
@@ -20,6 +20,7 @@
 -(void)identify:(CDVInvokedUrlCommand*)command;
 -(void)init:(CDVInvokedUrlCommand*)command;
 -(void)registerSuperProperties:(CDVInvokedUrlCommand*)command;
+-(void)registerSuperPropertiesOnce:(CDVInvokedUrlCommand*)command;
 -(void)reset:(CDVInvokedUrlCommand*)command;
 -(void)showSurvey:(CDVInvokedUrlCommand*)command;
 -(void)track:(CDVInvokedUrlCommand*)command;

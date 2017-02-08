@@ -117,6 +117,24 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+-(void)registerSuperPropertiesOnce:(CDVInvokedUrlCommand*)command
+{
+     CDVPluginResult* pluginResult = nil;
+    Mixpanel* mixpanelInstance = [Mixpanel sharedInstance];
+    NSDictionary* superProperties = [command.arguments objectAtIndex:0];
+
+    if (mixpanelInstance == nil)
+    {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Mixpanel not initialized"];
+    }
+    else
+    {
+        [mixpanelInstance registerSuperPropertiesOnce:superProperties];
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];   
+}
+
 
 -(void)reset:(CDVInvokedUrlCommand*)command;
 {
