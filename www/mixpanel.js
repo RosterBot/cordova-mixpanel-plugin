@@ -113,12 +113,12 @@ mixpanel.people.identify = function(distinctId, onSuccess, onFail) {
   exec(onSuccess, onFail, 'Mixpanel', 'identify', [distinctId]);
 };
 
-mixpanel.people.increment = function(peopleProperties, onSuccess, onFail) {
-  if (!peopleProperties || (typeof peopleProperties === 'object' && Object.keys(peopleProperties).length === 0)) {
-    return onFail(errors.invalid('properties', peopleProperties));
+mixpanel.people.increment = function(properties, amount, onSuccess, onFail) {
+  if (!properties || (typeof properties === 'object' && Object.keys(properties).length === 0)) {
+    return onFail(errors.invalid('properties', properties));
   }
 
-  exec(onSuccess, onFail, 'Mixpanel', 'people_increment', [peopleProperties]);
+  exec(onSuccess, onFail, 'Mixpanel', 'people_increment', [properties, amount]);
 };
 
 mixpanel.people.set = function(peopleProperties, onSuccess, onFail) {

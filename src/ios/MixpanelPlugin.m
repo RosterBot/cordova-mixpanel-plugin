@@ -241,7 +241,42 @@
     CDVPluginResult* pluginResult = nil;
     Mixpanel* mixpanelInstance = [Mixpanel sharedInstance];
     NSArray* arguments = command.arguments;
-    NSDictionary* peopleProperties = [command.arguments objectAtIndex:0];
+    id properties = [arguments objectAtIndex:0];
+    NSDictionary *nativeIncrementProperties;
+    
+    if([properties isKindOfClass:[NSDictionary class]])
+    {
+        nativeIncrementProperties = properties;
+    }
+    
+    if([properties isKindOfClass:[NSString class]])
+    {
+        if(arguments.count > 1)
+        {
+            id incValue = [arguments objectAtIndex:1];
+            
+            if([incValue isKindOfClass:[NSNull class]])
+            {
+                nativeIncrementProperties = @{properties: @1};
+            }
+            
+            if([incValue isKindOfClass:[NSNumber class]])
+            {
+                nativeIncrementProperties = @{properties: incValue};
+            }
+            
+            if([incValue isKindOfClass:[NSString class]])
+            {
+                NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+                f.numberStyle = NSNumberFormatterDecimalStyle;
+                nativeIncrementProperties = @{properties: [f numberFromString:incValue]};
+            }
+        }
+        else
+        {
+            nativeIncrementProperties = @{properties: @1};
+        }
+    }
 
     if (mixpanelInstance == nil)
     {
@@ -249,7 +284,7 @@
     }
     else
     {
-        [mixpanelInstance.people increment:peopleProperties];
+        [mixpanelInstance.people increment:nativeIncrementProperties];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
