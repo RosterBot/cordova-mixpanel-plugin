@@ -54,6 +54,22 @@ mixpanel.registerSuperProperties = function(superProperties, onSuccess, onFail) 
   exec(onSuccess, onFail, 'Mixpanel', 'registerSuperProperties', [superProperties]);
 };
 
+mixpanel.register = function(superProperties, onSuccess, onFail) {
+  if (!superProperties || typeof superProperties !== 'object') {
+    return onFail(errors.invalid('superProperties', superProperties));
+  }
+
+  exec(onSuccess, onFail, 'Mixpanel', 'registerSuperProperties', [superProperties]);
+};
+
+mixpanel.register_once = function(superProperties, onSuccess, onFail) {
+  if (!superProperties || typeof superProperties !== 'object') {
+    return onFail(errors.invalid('superProperties', superProperties));
+  }
+
+  exec(onSuccess, onFail, 'Mixpanel', 'registerSuperPropertiesOnce', [superProperties]);
+};
+
 mixpanel.reset = function(onSuccess, onFail) {
   exec(onSuccess, onFail, 'Mixpanel', 'reset', []);
 };
@@ -63,6 +79,13 @@ mixpanel.showSurvey = function(onSuccess, onFail) {
 };
 
 mixpanel.timeEvent = function(eventName, onSuccess, onFail) {
+  if (!eventName || typeof eventName != 'string') {
+    return onFail(errors.invalid('event', eventName));
+  }
+  exec(onSuccess, onFail, 'Mixpanel', 'timeEvent', [eventName]);
+};
+
+mixpanel.time_event = function(eventName, onSuccess, onFail) {
   if (!eventName || typeof eventName != 'string') {
     return onFail(errors.invalid('event', eventName));
   }
@@ -113,6 +136,15 @@ mixpanel.people.setOnce = function(peopleProperties, onSuccess, onFail) {
 
   exec(onSuccess, onFail, 'Mixpanel', 'people_set_once', [peopleProperties]);
 };
+
+mixpanel.people.set_once = function(peopleProperties, onSuccess, onFail) {
+  if (!peopleProperties || (typeof peopleProperties === 'object' && Object.keys(peopleProperties).length === 0)) {
+    return onFail(errors.invalid('properties', peopleProperties));
+  }
+
+  exec(onSuccess, onFail, 'Mixpanel', 'people_set_once', [peopleProperties]);
+};
+
 
 /**
  * @param pushId is the token/id you get back when registering the device with the notification service

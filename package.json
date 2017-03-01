@@ -8,15 +8,14 @@
     "id": "cordova-plugin-mixpanel",
     "platforms": [
       "android",
-      "ios",
-      "browser"
+      "ios"
     ]
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samzilverberg/cordova-mixpanel-plugin.git"
+    "url": "git+https://github.com/ed-at-work/cordova-mixpanel-plugin.git"
   },
-  "homepage": "https://github.com/samzilverberg/cordova-mixpanel-plugin#readme",
+  "homepage": "https://github.com/ed-at-work/cordova-mixpanel-plugin#readme",
   "keywords": [
     "mixpanel",
     "cordova",
