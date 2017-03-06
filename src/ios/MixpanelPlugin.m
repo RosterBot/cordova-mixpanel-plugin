@@ -20,6 +20,10 @@
     }
     else
     {
+        if([originalId isKindOfClass:[NSNull class]])
+        {
+            originalId = mixpanelInstance.distinctId;
+        }
         [mixpanelInstance createAlias:aliasId forDistinctID:originalId];
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     }
