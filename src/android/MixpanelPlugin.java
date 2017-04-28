@@ -17,7 +17,7 @@ import org.json.JSONObject;
 public class MixpanelPlugin extends CordovaPlugin {
 
     private static String LOG_TAG = "MIXPANEL PLUGIN";
-    private static MixpanelAPI mixpanel;
+    private MixpanelAPI mixpanel;
 
     private enum Action {
 
